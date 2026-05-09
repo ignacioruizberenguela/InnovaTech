@@ -25,17 +25,14 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          # Verificación de carpetas (Para diagnosticar si falla)
-          ls -R
-          
-          # Frontend
+          # 1. Frontend (Ruta correcta)
           docker build -t $ECR_REGISTRY/innovad/frontend:latest ./front_despacho
           docker push $ECR_REGISTRY/innovad/frontend:latest
           
-          # Backend Despachos
-          docker build -t $ECR_REGISTRY/innovad/backend-despachos:latest ./back-Despachos_SpringBoot
+          # 2. Backend Despachos (Ruta corregida)
+          docker build -t $ECR_REGISTRY/innovad/backend-despachos:latest ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
           docker push $ECR_REGISTRY/innovad/backend-despachos:latest
           
-          # Backend Ventas
-          docker build -t $ECR_REGISTRY/innovad/backend-ventas:latest ./back-Ventas_SpringBoot
+          # 3. Backend Ventas (Ruta corregida)
+          docker build -t $ECR_REGISTRY/innovad/backend-ventas:latest ./back-Ventas_SpringBoot/Springboot-API-REST
           docker push $ECR_REGISTRY/innovad/backend-ventas:latest

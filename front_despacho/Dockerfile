@@ -1,4 +1,4 @@
-# Etapa 1: Construcción
+# Etapa 1: Build (Construcción)
 FROM node:18 AS build
 WORKDIR /app
 COPY package*.json ./
@@ -6,12 +6,9 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Etapa 2: Producción
-FROM node:18-slim
-USER node
-WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/package*.json ./
-RUN npm install --only=production
-EXPOSE 8080
-CMD ["node", "dist/main.js"]
+# Etapa 2: Producción (Servidor Web Nginx)
+FROM nginx:alpine
+# Copiamos los archivos estáticos de Vite al directorio de Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
