@@ -5,9 +5,9 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Ejecución (Seguridad/Mínimo Privilegio)
-FROM openjdk:17-jdk-slim
-RUN adduser --system --group spring
+# Etapa 2: Ejecución (Cambiamos a Amazon Corretto para estabilidad en AWS)
+FROM amazoncorretto:17-al2-jdk
+RUN adduser spring
 USER spring
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar

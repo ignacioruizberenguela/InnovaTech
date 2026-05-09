@@ -29,7 +29,7 @@ jobs:
           docker build -t $ECR_REGISTRY/innovad/frontend:latest ./front_despacho
           docker push $ECR_REGISTRY/innovad/frontend:latest
           
-          # 2. Backend Despachos (Ruta corregida)
+          # 2. Backend Despachos
           docker build -t $ECR_REGISTRY/innovad/backend-despachos:latest ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
           docker push $ECR_REGISTRY/innovad/backend-despachos:latest
           
