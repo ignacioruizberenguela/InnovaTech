@@ -1,15 +1,13 @@
-# Etapa 1: Construcción
+# Etapa 1: Build
 FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Ejecución
+# Etapa 2: Ejecución (Optimizada para AWS Academy)
 FROM amazoncorretto:17-al2-jdk
-# Amazon Linux usa useradd en lugar de adduser
-RUN useradd spring
-USER spring
+USER 1000
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
