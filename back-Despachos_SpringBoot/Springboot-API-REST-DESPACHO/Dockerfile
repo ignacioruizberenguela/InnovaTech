@@ -5,11 +5,11 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Ejecución 
-FROM openjdk:17-jdk-slimS
-RUN addgroup --system spring && adduser --system spring --ingroup spring
-USER spring:spring
+# Etapa 2: Ejecución (Seguridad/Mínimo Privilegio)
+FROM openjdk:17-jdk-slim
+RUN adduser --system --group spring
+USER spring
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]S
+ENTRYPOINT ["java", "-jar", "app.jar"]
