@@ -1,0 +1,45 @@
+name: Docker Build and Deploy to AWS ECR
+on:
+  push:
+    branches: [ main, deploy ]
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-secret-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-secret-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-secret-region: ${{ secrets.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      #BLOQUE FRONTEND
+      - name: Build and Push Frontend
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: innovad/frontend
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./front_despacho
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      #BLOQUE BACKEND (Despachos)
+      - name: Build and Push Backend Despachos
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: innovad/backend-despachos
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./back-Despachos_SpringBoot
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      #BLOQUE BACKEND (Ventas)
+      - name: Build and Push Backend Ventas
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: innovad/backend-ventas
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./back-Ventas_SpringBoot
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
