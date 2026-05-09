@@ -5,9 +5,10 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Ejecución (Cambiamos a Amazon Corretto para estabilidad en AWS)
+# Etapa 2: Ejecución
 FROM amazoncorretto:17-al2-jdk
-RUN adduser spring
+# Amazon Linux usa useradd en lugar de adduser
+RUN useradd spring
 USER spring
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
