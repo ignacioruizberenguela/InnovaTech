@@ -1,0 +1,18 @@
+name: docker-compose.yml
+version: '3.8'
+services:
+  database:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: innovadb
+    volumes:
+      - db_data:/var/lib/mysql
+  backend:
+    build: ./back-Despachos_SpringBoot
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+volumes:
+  db_data:
